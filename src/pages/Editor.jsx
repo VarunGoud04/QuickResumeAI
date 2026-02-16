@@ -8,7 +8,6 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ResumePreview from "../components/ResumePreview";
 
-
 const defaultContent = {
   header: {
     fullName: "",
@@ -357,38 +356,43 @@ function Editor() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div
+      className="flex flex-col min-h-screen bg-gray-50"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
       <Navbar />
 
-      <main className="flex-grow p-6">
-        <div className="max-w-7xl mx-auto flex gap-6">
+      <main className="flex-grow px-3 py-4 sm:px-4 sm:py-6">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4 lg:gap-6">
           {/* Sidebar */}
-          <div className="w-64 bg-white rounded-lg shadow p-4 space-y-3 sticky top-6 h-fit animate-[fadeIn_0.3s_ease-out]">
-            <div className="pb-2 border-b">
-              <h3 className="font-bold text-lg">Editor</h3>
-              <p
-                className={`text-xs font-medium ${
-                  autoSaveStatus === "saved"
-                    ? "text-green-600"
-                    : autoSaveStatus === "saving"
-                    ? "text-yellow-600"
-                    : "text-red-600"
-                }`}
-              >
-                {autoSaveStatus === "saving"
-                  ? "● Saving..."
-                  : autoSaveStatus === "saved"
-                  ? "✓ All changes saved"
-                  : "Auto-save error"}
-              </p>
+          <div className="w-full lg:w-64 bg-white rounded-lg shadow p-4 space-y-3 lg:sticky lg:top-6 lg:h-fit animate-[fadeIn_0.3s_ease-out]">
+            <div className="pb-2 border-b flex items-center justify-between gap-2">
+              <div>
+                <h3 className="font-bold text-base sm:text-lg">Editor</h3>
+                <p
+                  className={`text-xs font-medium ${
+                    autoSaveStatus === "saved"
+                      ? "text-green-600"
+                      : autoSaveStatus === "saving"
+                      ? "text-yellow-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {autoSaveStatus === "saving"
+                    ? "● Saving..."
+                    : autoSaveStatus === "saved"
+                    ? "✓ All changes saved"
+                    : "Auto-save error"}
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1 max-h-[260px] overflow-y-auto pr-1">
               {sections.map((sec, index) => (
                 <div key={sec.id} className="flex items-center group">
                   <button
                     onClick={() => setActiveSection(sec.id)}
-                    className={`flex-1 text-left px-3 py-2 rounded-l transition-colors ${
+                    className={`flex-1 text-left px-3 py-2 rounded-l text-sm sm:text-[0.9rem] transition-colors ${
                       activeSection === sec.id
                         ? "bg-indigo-600 text-white"
                         : "hover:bg-gray-100"
@@ -400,14 +404,14 @@ function Editor() {
                     <button
                       disabled={index === 0}
                       onClick={() => moveSection(sec.id, "up")}
-                      className="px-1 hover:text-indigo-600 disabled:opacity-30"
+                      className="w-8 h-8 flex items-center justify-center text-xs hover:text-indigo-600 disabled:opacity-30"
                     >
                       ↑
                     </button>
                     <button
                       disabled={index === sections.length - 1}
                       onClick={() => moveSection(sec.id, "down")}
-                      className="px-1 hover:text-indigo-600 disabled:opacity-30"
+                      className="w-8 h-8 flex items-center justify-center text-xs hover:text-indigo-600 disabled:opacity-30"
                     >
                       ↓
                     </button>
@@ -459,20 +463,20 @@ function Editor() {
           </div>
 
           {/* Editor Panel */}
-          <div className="flex-1 bg-white rounded-lg shadow p-8 min-h-[600px] animate-[fadeIn_0.25s_ease-out]">
+          <div className="flex-1 bg-white rounded-lg shadow p-4 sm:p-6 lg:p-8 min-h-[500px] sm:min-h-[600px] animate-[fadeIn_0.25s_ease-out]">
             {activeSection === "header" && (
               <div className="animate-[slideIn_0.25s_ease-out]">
-                <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
+                <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800 border-b pb-2">
                   Contact Information
                 </h2>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   {Object.keys(content.header).map(key => (
                     <div key={key}>
-                      <label className="block text-sm font-semibold text-gray-600 capitalize mb-1">
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-600 capitalize mb-1">
                         {key.replace(/([A-Z])/g, " $1")}
                       </label>
                       <input
-                        className="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="w-full h-11 sm:h-12 border px-3 py-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none text-sm sm:text-base"
                         value={content.header[key]}
                         onChange={e => updateHeader(key, e.target.value)}
                         placeholder={`Your ${key}`}
@@ -491,13 +495,13 @@ function Editor() {
                   key={sec.id}
                   className="animate-[slideIn_0.25s_ease-out]"
                 >
-                  <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800 border-b pb-2">
                     {sec.title}
                   </h2>
 
                   {sec.type === "text" && (
                     <textarea
-                      className="w-full border p-4 rounded min-h-[200px] focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="w-full border px-3 py-3 rounded min-h-[180px] sm:min-h-[220px] focus:ring-2 focus:ring-indigo-500 outline-none text-sm sm:text-base resize-vertical"
                       value={content[sec.contentKey] || ""}
                       onChange={e => updateSimple(sec.contentKey, e.target.value)}
                       placeholder={`Write your ${sec.title.toLowerCase()} here...`}
@@ -509,17 +513,17 @@ function Editor() {
                       {content.education.map((edu, i) => (
                         <div
                           key={i}
-                          className="group border p-4 rounded-lg relative hover:border-indigo-300 transition"
+                          className="group border p-4 sm:p-5 rounded-lg relative hover:border-indigo-300 transition"
                         >
                           <button
                             onClick={() => removeEducation(i)}
-                            className="absolute top-2 right-2 text-red-400 hover:text-red-600"
+                            className="absolute top-2 right-2 text-xs sm:text-sm text-red-400 hover:text-red-600"
                           >
                             Remove
                           </button>
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <input
-                              className="border p-2 rounded"
+                              className="border px-3 py-2 rounded text-sm sm:text-base"
                               placeholder="Degree / Course"
                               value={edu.degree}
                               onChange={e =>
@@ -527,7 +531,7 @@ function Editor() {
                               }
                             />
                             <input
-                              className="border p-2 rounded"
+                              className="border px-3 py-2 rounded text-sm sm:text-base"
                               placeholder="Duration (e.g. 2020 - 2024)"
                               value={edu.duration}
                               onChange={e =>
@@ -535,7 +539,7 @@ function Editor() {
                               }
                             />
                             <input
-                              className="border p-2 rounded col-span-2"
+                              className="border px-3 py-2 rounded col-span-1 sm:col-span-2 text-sm sm:text-base"
                               placeholder="Institution Name"
                               value={edu.institution}
                               onChange={e =>
@@ -547,7 +551,7 @@ function Editor() {
                       ))}
                       <button
                         onClick={addEducation}
-                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium hover:bg-indigo-50"
+                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base hover:bg-indigo-50"
                       >
                         + Add Education Entry
                       </button>
@@ -555,15 +559,15 @@ function Editor() {
                   )}
 
                   {sec.type === "experience" && (
-                    <div className="space-y-6">
+                    <div className="space-y-5 sm:space-y-6">
                       {content.experience.map((exp, i) => (
                         <div
                           key={i}
-                          className="border p-5 rounded-xl bg-gray-50/50"
+                          className="border p-4 sm:p-5 rounded-xl bg-gray-50/50"
                         >
-                          <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
                             <input
-                              className="font-bold border p-2 rounded"
+                              className="font-bold border px-3 py-2 rounded text-sm sm:text-base"
                               placeholder="Job Title / Role"
                               value={exp.role}
                               onChange={e =>
@@ -571,7 +575,7 @@ function Editor() {
                               }
                             />
                             <input
-                              className="border p-2 rounded"
+                              className="border px-3 py-2 rounded text-sm sm:text-base"
                               placeholder="Company Name"
                               value={exp.company}
                               onChange={e =>
@@ -579,7 +583,7 @@ function Editor() {
                               }
                             />
                             <input
-                              className="border p-2 rounded"
+                              className="border px-3 py-2 rounded text-sm sm:text-base"
                               placeholder="Duration"
                               value={exp.duration}
                               onChange={e =>
@@ -588,45 +592,49 @@ function Editor() {
                             />
                             <button
                               onClick={() => removeExperience(i)}
-                              className="text-red-500 text-right text-sm"
+                              className="text-red-500 text-xs sm:text-sm text-right sm:text-right mt-1 sm:mt-0"
                             >
                               Delete Experience
                             </button>
                           </div>
                           <div className="space-y-2">
-                            <p className="text-xs font-bold text-gray-500 uppercase">
+                            <p className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase">
                               Key Responsibilities
                             </p>
                             {exp.bullets.map((b, bi) => (
-                              <div key={bi} className="flex gap-2 items-start">
-                                <span className="mt-2 text-gray-400">•</span>
+                              <div key={bi} className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-start">
+                                <div className="flex mt-1 sm:mt-2 text-gray-400">
+                                  <span>•</span>
+                                </div>
                                 <textarea
-                                  className="flex-1 border p-2 rounded text-sm"
+                                  className="flex-1 border px-3 py-2 rounded text-sm sm:text-base"
                                   value={b}
                                   onChange={e =>
                                     updateBullet(i, bi, e.target.value)
                                   }
                                   rows={2}
                                 />
-                                <button
-                                  onClick={() =>
-                                    handleEnhanceBullet(i, bi, b)
-                                  }
-                                  className="bg-indigo-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-indigo-700"
-                                >
-                                  AI
-                                </button>
-                                <button
-                                  onClick={() => removeBullet(i, bi)}
-                                  className="text-gray-300 hover:text-red-500 ml-1"
-                                >
-                                  ×
-                                </button>
+                                <div className="flex gap-1 sm:flex-col sm:gap-2">
+                                  <button
+                                    onClick={() =>
+                                      handleEnhanceBullet(i, bi, b)
+                                    }
+                                    className="bg-indigo-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-indigo-700"
+                                  >
+                                    AI
+                                  </button>
+                                  <button
+                                    onClick={() => removeBullet(i, bi)}
+                                    className="text-gray-300 hover:text-red-500 text-lg leading-none px-2"
+                                  >
+                                    ×
+                                  </button>
+                                </div>
                               </div>
                             ))}
                             <button
                               onClick={() => addBullet(i)}
-                              className="text-indigo-600 text-sm font-medium"
+                              className="text-indigo-600 text-sm font-medium mt-1"
                             >
                               + Add Point
                             </button>
@@ -635,7 +643,7 @@ function Editor() {
                       ))}
                       <button
                         onClick={addExperience}
-                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium"
+                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base"
                       >
                         + Add Work Experience
                       </button>
@@ -645,9 +653,9 @@ function Editor() {
                   {sec.type === "projects" && (
                     <div className="space-y-4">
                       {content.projects.map((proj, i) => (
-                        <div key={i} className="border p-4 rounded-lg">
+                        <div key={i} className="border p-4 sm:p-5 rounded-lg">
                           <input
-                            className="w-full font-bold border-b mb-2 p-1 outline-none"
+                            className="w-full font-bold border-b mb-2 p-1 outline-none text-sm sm:text-base"
                             placeholder="Project Title"
                             value={proj.title}
                             onChange={e =>
@@ -655,7 +663,7 @@ function Editor() {
                             }
                           />
                           <textarea
-                            className="w-full border p-2 rounded mt-2 text-sm"
+                            className="w-full border px-3 py-2 rounded mt-2 text-sm sm:text-base"
                             placeholder="Description"
                             rows="3"
                             value={proj.description}
@@ -664,7 +672,7 @@ function Editor() {
                             }
                           />
                           <input
-                            className="w-full border p-2 rounded mt-2 text-xs bg-gray-50"
+                            className="w-full border px-3 py-2 rounded mt-2 text-xs sm:text-sm bg-gray-50"
                             placeholder="Tech Stack (e.g. React, Node.js, MongoDB)"
                             value={proj.techStack}
                             onChange={e =>
@@ -681,7 +689,7 @@ function Editor() {
                       ))}
                       <button
                         onClick={addProject}
-                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium"
+                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base"
                       >
                         + Add Project
                       </button>
@@ -692,11 +700,11 @@ function Editor() {
                     <div className="grid grid-cols-1 gap-4">
                       {Object.keys(content.technicalSkills).map(key => (
                         <div key={key} className="flex flex-col">
-                          <label className="text-sm font-bold text-gray-600 capitalize mb-1">
+                          <label className="text-xs sm:text-sm font-bold text-gray-600 capitalize mb-1">
                             {key}
                           </label>
                           <input
-                            className="w-full border p-2 rounded focus:border-indigo-500 outline-none"
+                            className="w-full border px-3 py-2 rounded focus:border-indigo-500 outline-none text-sm sm:text-base"
                             placeholder={
                               key === "languages"
                                 ? "Java, Python, C++"
@@ -719,7 +727,7 @@ function Editor() {
       </main>
 
       {/* Simple footer */}
-      <footer className="bg-gray-900 text-gray-300 text-xs py-3 text-center">
+      <footer className="bg-gray-900 text-gray-300 text-[10px] sm:text-xs py-3 text-center">
         Resume Builder • Made with React • PDF export & AI ATS enhancement coming soon
       </footer>
     </div>
