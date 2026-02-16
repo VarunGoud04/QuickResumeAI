@@ -327,10 +327,8 @@ function Editor() {
 
       const { data } = await API.post("/ai/enhance-resume", {
         content
-        // optionally send: targetRole, industry, etc.
       });
 
-      // Expect backend to return { content: { ...same shape... } }
       if (data?.content) {
         setContent(prev => ({
           ...prev,
@@ -462,271 +460,281 @@ function Editor() {
             </div>
           </div>
 
-          {/* Editor Panel */}
-          <div className="flex-1 bg-white rounded-lg shadow p-4 sm:p-6 lg:p-8 min-h-[500px] sm:min-h-[600px] animate-[fadeIn_0.25s_ease-out]">
-            {activeSection === "header" && (
-              <div className="animate-[slideIn_0.25s_ease-out]">
-                <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800 border-b pb-2">
-                  Contact Information
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  {Object.keys(content.header).map(key => (
-                    <div key={key}>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-600 capitalize mb-1">
-                        {key.replace(/([A-Z])/g, " $1")}
-                      </label>
-                      <input
-                        className="w-full h-11 sm:h-12 border px-3 py-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none text-sm sm:text-base"
-                        value={content.header[key]}
-                        onChange={e => updateHeader(key, e.target.value)}
-                        placeholder={`Your ${key}`}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {sections.map(sec => {
-              if (activeSection !== sec.id || sec.id === "header") return null;
-
-              return (
-                <div
-                  key={sec.id}
-                  className="animate-[slideIn_0.25s_ease-out]"
-                >
+          {/* Editor + Preview */}
+          <div className="flex-1 flex flex-col lg:flex-row gap-4">
+            {/* Editor Panel */}
+            <div className="flex-1 bg-white rounded-lg shadow p-4 sm:p-6 lg:p-8 min-h-[500px] sm:min-h-[600px] animate-[fadeIn_0.25s_ease-out]">
+              {activeSection === "header" && (
+                <div className="animate-[slideIn_0.25s_ease-out]">
                   <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800 border-b pb-2">
-                    {sec.title}
+                    Contact Information
                   </h2>
-
-                  {sec.type === "text" && (
-                    <textarea
-                      className="w-full border px-3 py-3 rounded min-h-[180px] sm:min-h-[220px] focus:ring-2 focus:ring-indigo-500 outline-none text-sm sm:text-base resize-vertical"
-                      value={content[sec.contentKey] || ""}
-                      onChange={e => updateSimple(sec.contentKey, e.target.value)}
-                      placeholder={`Write your ${sec.title.toLowerCase()} here...`}
-                    />
-                  )}
-
-                  {sec.type === "education" && (
-                    <div className="space-y-4">
-                      {content.education.map((edu, i) => (
-                        <div
-                          key={i}
-                          className="group border p-4 sm:p-5 rounded-lg relative hover:border-indigo-300 transition"
-                        >
-                          <button
-                            onClick={() => removeEducation(i)}
-                            className="absolute top-2 right-2 text-xs sm:text-sm text-red-400 hover:text-red-600"
-                          >
-                            Remove
-                          </button>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <input
-                              className="border px-3 py-2 rounded text-sm sm:text-base"
-                              placeholder="Degree / Course"
-                              value={edu.degree}
-                              onChange={e =>
-                                updateEducation(i, "degree", e.target.value)
-                              }
-                            />
-                            <input
-                              className="border px-3 py-2 rounded text-sm sm:text-base"
-                              placeholder="Duration (e.g. 2020 - 2024)"
-                              value={edu.duration}
-                              onChange={e =>
-                                updateEducation(i, "duration", e.target.value)
-                              }
-                            />
-                            <input
-                              className="border px-3 py-2 rounded col-span-1 sm:col-span-2 text-sm sm:text-base"
-                              placeholder="Institution Name"
-                              value={edu.institution}
-                              onChange={e =>
-                                updateEducation(i, "institution", e.target.value)
-                              }
-                            />
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        onClick={addEducation}
-                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base hover:bg-indigo-50"
-                      >
-                        + Add Education Entry
-                      </button>
-                    </div>
-                  )}
-
-                  {sec.type === "experience" && (
-                    <div className="space-y-5 sm:space-y-6">
-                      {content.experience.map((exp, i) => (
-                        <div
-                          key={i}
-                          className="border p-4 sm:p-5 rounded-xl bg-gray-50/50"
-                        >
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
-                            <input
-                              className="font-bold border px-3 py-2 rounded text-sm sm:text-base"
-                              placeholder="Job Title / Role"
-                              value={exp.role}
-                              onChange={e =>
-                                updateExperience(i, "role", e.target.value)
-                              }
-                            />
-                            <input
-                              className="border px-3 py-2 rounded text-sm sm:text-base"
-                              placeholder="Company Name"
-                              value={exp.company}
-                              onChange={e =>
-                                updateExperience(i, "company", e.target.value)
-                              }
-                            />
-                            <input
-                              className="border px-3 py-2 rounded text-sm sm:text-base"
-                              placeholder="Duration"
-                              value={exp.duration}
-                              onChange={e =>
-                                updateExperience(i, "duration", e.target.value)
-                              }
-                            />
-                            <button
-                              onClick={() => removeExperience(i)}
-                              className="text-red-500 text-xs sm:text-sm text-right sm:text-right mt-1 sm:mt-0"
-                            >
-                              Delete Experience
-                            </button>
-                          </div>
-                          <div className="space-y-2">
-                            <p className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase">
-                              Key Responsibilities
-                            </p>
-                            {exp.bullets.map((b, bi) => (
-                              <div key={bi} className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-start">
-                                <div className="flex mt-1 sm:mt-2 text-gray-400">
-                                  <span>•</span>
-                                </div>
-                                <textarea
-                                  className="flex-1 border px-3 py-2 rounded text-sm sm:text-base"
-                                  value={b}
-                                  onChange={e =>
-                                    updateBullet(i, bi, e.target.value)
-                                  }
-                                  rows={2}
-                                />
-                                <div className="flex gap-1 sm:flex-col sm:gap-2">
-                                  <button
-                                    onClick={() =>
-                                      handleEnhanceBullet(i, bi, b)
-                                    }
-                                    className="bg-indigo-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-indigo-700"
-                                  >
-                                    AI
-                                  </button>
-                                  <button
-                                    onClick={() => removeBullet(i, bi)}
-                                    className="text-gray-300 hover:text-red-500 text-lg leading-none px-2"
-                                  >
-                                    ×
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                            <button
-                              onClick={() => addBullet(i)}
-                              className="text-indigo-600 text-sm font-medium mt-1"
-                            >
-                              + Add Point
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        onClick={addExperience}
-                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base"
-                      >
-                        + Add Work Experience
-                      </button>
-                    </div>
-                  )}
-
-                  {sec.type === "projects" && (
-                    <div className="space-y-4">
-                      {content.projects.map((proj, i) => (
-                        <div key={i} className="border p-4 sm:p-5 rounded-lg">
-                          <input
-                            className="w-full font-bold border-b mb-2 p-1 outline-none text-sm sm:text-base"
-                            placeholder="Project Title"
-                            value={proj.title}
-                            onChange={e =>
-                              updateProject(i, "title", e.target.value)
-                            }
-                          />
-                          <textarea
-                            className="w-full border px-3 py-2 rounded mt-2 text-sm sm:text-base"
-                            placeholder="Description"
-                            rows="3"
-                            value={proj.description}
-                            onChange={e =>
-                              updateProject(i, "description", e.target.value)
-                            }
-                          />
-                          <input
-                            className="w-full border px-3 py-2 rounded mt-2 text-xs sm:text-sm bg-gray-50"
-                            placeholder="Tech Stack (e.g. React, Node.js, MongoDB)"
-                            value={proj.techStack}
-                            onChange={e =>
-                              updateProject(i, "techStack", e.target.value)
-                            }
-                          />
-                          <button
-                            onClick={() => removeProject(i)}
-                            className="text-red-500 text-xs mt-2"
-                          >
-                            Delete Project
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        onClick={addProject}
-                        className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base"
-                      >
-                        + Add Project
-                      </button>
-                    </div>
-                  )}
-
-                  {sec.type === "skills" && (
-                    <div className="grid grid-cols-1 gap-4">
-                      {Object.keys(content.technicalSkills).map(key => (
-                        <div key={key} className="flex flex-col">
-                          <label className="text-xs sm:text-sm font-bold text-gray-600 capitalize mb-1">
-                            {key}
-                          </label>
-                          <input
-                            className="w-full border px-3 py-2 rounded focus:border-indigo-500 outline-none text-sm sm:text-base"
-                            placeholder={
-                              key === "languages"
-                                ? "Java, Python, C++"
-                                : "Your tools / technologies"
-                            }
-                            value={content.technicalSkills[key]}
-                            onChange={e =>
-                              updateSkills(key, e.target.value)
-                            }
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    {Object.keys(content.header).map(key => (
+                      <div key={key}>
+                        <label className="block text-xs sm:text-sm font-semibold text-gray-600 capitalize mb-1">
+                          {key.replace(/([A-Z])/g, " $1")}
+                        </label>
+                        <input
+                          className="w-full h-11 sm:h-12 border px-3 py-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none text-sm sm:text-base"
+                          value={content.header[key]}
+                          onChange={e => updateHeader(key, e.target.value)}
+                          placeholder={`Your ${key}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              );
-            })}
+              )}
+
+              {sections.map(sec => {
+                if (activeSection !== sec.id || sec.id === "header") return null;
+
+                return (
+                  <div
+                    key={sec.id}
+                    className="animate-[slideIn_0.25s_ease-out]"
+                  >
+                    <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800 border-b pb-2">
+                      {sec.title}
+                    </h2>
+
+                    {sec.type === "text" && (
+                      <textarea
+                        className="w-full border px-3 py-3 rounded min-h-[180px] sm:min-h-[220px] focus:ring-2 focus:ring-indigo-500 outline-none text-sm sm:text-base resize-vertical"
+                        value={content[sec.contentKey] || ""}
+                        onChange={e => updateSimple(sec.contentKey, e.target.value)}
+                        placeholder={`Write your ${sec.title.toLowerCase()} here...`}
+                      />
+                    )}
+
+                    {sec.type === "education" && (
+                      <div className="space-y-4">
+                        {content.education.map((edu, i) => (
+                          <div
+                            key={i}
+                            className="group border p-4 sm:p-5 rounded-lg relative hover:border-indigo-300 transition"
+                          >
+                            <button
+                              onClick={() => removeEducation(i)}
+                              className="absolute top-2 right-2 text-xs sm:text-sm text-red-400 hover:text-red-600"
+                            >
+                              Remove
+                            </button>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                              <input
+                                className="border px-3 py-2 rounded text-sm sm:text-base"
+                                placeholder="Degree / Course"
+                                value={edu.degree}
+                                onChange={e =>
+                                  updateEducation(i, "degree", e.target.value)
+                                }
+                              />
+                              <input
+                                className="border px-3 py-2 rounded text-sm sm:text-base"
+                                placeholder="Duration (e.g. 2020 - 2024)"
+                                value={edu.duration}
+                                onChange={e =>
+                                  updateEducation(i, "duration", e.target.value)
+                                }
+                              />
+                              <input
+                                className="border px-3 py-2 rounded col-span-1 sm:col-span-2 text-sm sm:text-base"
+                                placeholder="Institution Name"
+                                value={edu.institution}
+                                onChange={e =>
+                                  updateEducation(i, "institution", e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
+                        ))}
+                        <button
+                          onClick={addEducation}
+                          className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base hover:bg-indigo-50"
+                        >
+                          + Add Education Entry
+                        </button>
+                      </div>
+                    )}
+
+                    {sec.type === "experience" && (
+                      <div className="space-y-5 sm:space-y-6">
+                        {content.experience.map((exp, i) => (
+                          <div
+                            key={i}
+                            className="border p-4 sm:p-5 rounded-xl bg-gray-50/50"
+                          >
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+                              <input
+                                className="font-bold border px-3 py-2 rounded text-sm sm:text-base"
+                                placeholder="Job Title / Role"
+                                value={exp.role}
+                                onChange={e =>
+                                  updateExperience(i, "role", e.target.value)
+                                }
+                              />
+                              <input
+                                className="border px-3 py-2 rounded text-sm sm:text-base"
+                                placeholder="Company Name"
+                                value={exp.company}
+                                onChange={e =>
+                                  updateExperience(i, "company", e.target.value)
+                                }
+                              />
+                              <input
+                                className="border px-3 py-2 rounded text-sm sm:text-base"
+                                placeholder="Duration"
+                                value={exp.duration}
+                                onChange={e =>
+                                  updateExperience(i, "duration", e.target.value)
+                                }
+                              />
+                              <button
+                                onClick={() => removeExperience(i)}
+                                className="text-red-500 text-xs sm:text-sm text-right sm:text-right mt-1 sm:mt-0"
+                              >
+                                Delete Experience
+                              </button>
+                            </div>
+                            <div className="space-y-2">
+                              <p className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase">
+                                Key Responsibilities
+                              </p>
+                              {exp.bullets.map((b, bi) => (
+                                <div key={bi} className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-start">
+                                  <div className="flex mt-1 sm:mt-2 text-gray-400">
+                                    <span>•</span>
+                                  </div>
+                                  <textarea
+                                    className="flex-1 border px-3 py-2 rounded text-sm sm:text-base"
+                                    value={b}
+                                    onChange={e =>
+                                      updateBullet(i, bi, e.target.value)
+                                    }
+                                    rows={2}
+                                  />
+                                  <div className="flex gap-1 sm:flex-col sm:gap-2">
+                                    <button
+                                      onClick={() =>
+                                        handleEnhanceBullet(i, bi, b)
+                                      }
+                                      className="bg-indigo-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-indigo-700"
+                                    >
+                                      AI
+                                    </button>
+                                    <button
+                                      onClick={() => removeBullet(i, bi)}
+                                      className="text-gray-300 hover:text-red-500 text-lg leading-none px-2"
+                                    >
+                                      ×
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                              <button
+                                onClick={() => addBullet(i)}
+                                className="text-indigo-600 text-sm font-medium mt-1"
+                              >
+                                + Add Point
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                        <button
+                          onClick={addExperience}
+                          className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base"
+                        >
+                          + Add Work Experience
+                        </button>
+                      </div>
+                    )}
+
+                    {sec.type === "projects" && (
+                      <div className="space-y-4">
+                        {content.projects.map((proj, i) => (
+                          <div key={i} className="border p-4 sm:p-5 rounded-lg">
+                            <input
+                              className="w-full font-bold border-b mb-2 p-1 outline-none text-sm sm:text-base"
+                              placeholder="Project Title"
+                              value={proj.title}
+                              onChange={e =>
+                                updateProject(i, "title", e.target.value)
+                              }
+                            />
+                            <textarea
+                              className="w-full border px-3 py-2 rounded mt-2 text-sm sm:text-base"
+                              placeholder="Description"
+                              rows="3"
+                              value={proj.description}
+                              onChange={e =>
+                                updateProject(i, "description", e.target.value)
+                              }
+                            />
+                            <input
+                              className="w-full border px-3 py-2 rounded mt-2 text-xs sm:text-sm bg-gray-50"
+                              placeholder="Tech Stack (e.g. React, Node.js, MongoDB)"
+                              value={proj.techStack}
+                              onChange={e =>
+                                updateProject(i, "techStack", e.target.value)
+                              }
+                            />
+                            <button
+                              onClick={() => removeProject(i)}
+                              className="text-red-500 text-xs mt-2"
+                            >
+                              Delete Project
+                            </button>
+                          </div>
+                        ))}
+                        <button
+                          onClick={addProject}
+                          className="w-full py-3 border-2 border-dashed rounded-lg text-indigo-600 font-medium text-sm sm:text-base"
+                        >
+                          + Add Project
+                        </button>
+                      </div>
+                    )}
+
+                    {sec.type === "skills" && (
+                      <div className="grid grid-cols-1 gap-4">
+                        {Object.keys(content.technicalSkills).map(key => (
+                          <div key={key} className="flex flex-col">
+                            <label className="text-xs sm:text-sm font-bold text-gray-600 capitalize mb-1">
+                              {key}
+                            </label>
+                            <input
+                              className="w-full border px-3 py-2 rounded focus:border-indigo-500 outline-none text-sm sm:text-base"
+                              placeholder={
+                                key === "languages"
+                                  ? "Java, Python, C++"
+                                  : "Your tools / technologies"
+                              }
+                              value={content.technicalSkills[key]}
+                              onChange={e =>
+                                updateSkills(key, e.target.value)
+                              }
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Preview Panel */}
+            <div className="w-full lg:w-[380px] xl:w-[420px] bg-white rounded-lg shadow p-4 sm:p-5 overflow-y-auto max-h-[80vh]">
+              <h3 className="text-sm font-semibold text-gray-500 mb-3">
+                Live Preview
+              </h3>
+              <ResumePreview content={content} sections={sections} />
+            </div>
           </div>
         </div>
       </main>
 
-      {/* Simple footer */}
       <footer className="bg-gray-900 text-gray-300 text-[10px] sm:text-xs py-3 text-center">
         Resume Builder • Made with React • PDF export & AI ATS enhancement coming soon
       </footer>
