@@ -23,6 +23,9 @@
       "dest": "/robots.txt"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

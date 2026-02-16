@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import {
   SparklesIcon,
   CheckCircleIcon,
@@ -11,8 +9,6 @@ import {
 function Landing() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-purple-50">
-      <Navbar />
-
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-16 bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
@@ -198,8 +194,6 @@ function Landing() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

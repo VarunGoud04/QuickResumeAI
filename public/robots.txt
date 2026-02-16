@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://quickresumeai.vercel.app/sitemap.xml
