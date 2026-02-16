@@ -4,6 +4,10 @@ import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import API from "../services/api";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import ResumePreview from "../components/ResumePreview";
+
 
 const defaultContent = {
   header: {
