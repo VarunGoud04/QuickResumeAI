@@ -4,10 +4,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import API from "../services/api";
 
-<Helmet>
-  <title>Dashboard | QuickResumeAI</title>
-  <meta name="robots" content="noindex, nofollow" />
-</Helmet>
 
 
 function Dashboard() {
@@ -37,6 +33,19 @@ function Dashboard() {
     { id: "technicalSkills", title: "Technical Skills", type: "skills", contentKey: "technicalSkills" }
   ];
 
+  useEffect(() => {
+    document.title = "Dashboard | QuickResumeAI";
+
+    // Optional: prevent indexing private pages
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
   const fetchResumes = async () => {
     try {
       const { data } = await API.get("/resumes");

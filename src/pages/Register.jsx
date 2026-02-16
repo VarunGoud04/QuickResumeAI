@@ -1,14 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import API from "../services/api";
 
-<Helmet>
-  <title>Register | QuickResumeAI</title>
-  <meta name="robots" content="noindex, nofollow" />
-</Helmet>
+
 
 function Register() {
   const [firstName, setFirstName] = useState("");
@@ -22,6 +19,19 @@ function Register() {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  useEffect(() => {
+    document.title = "Register | QuickResumeAI";
+
+    // Optional: prevent indexing private pages
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

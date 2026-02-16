@@ -1,15 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import API from "../services/api";
-import { Helmet } from "react-helmet-async";
-
-<Helmet>
-  <title>Login | QuickResumeAI</title>
-  <meta name="robots" content="noindex, nofollow" />
-</Helmet>
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -20,6 +14,11 @@ function Login() {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // ✅ SEO Title (Correct Placement)
+  useEffect(() => {
+    document.title = "Login | QuickResumeAI";
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,31 +49,31 @@ function Login() {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
 
-      <main className="flex-grow flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8">
-        <div className="relative w-full max-w-sm sm:max-w-md">
-          {/* soft glow background */}
+      <main className="flex-grow flex items-center justify-center px-4 py-8">
+        <div className="relative w-full max-w-md">
           <div className="absolute -inset-1 bg-gradient-to-r from-indigo-200 to-blue-200 rounded-3xl blur-2xl opacity-60"></div>
 
-          <div className="relative bg-white shadow-lg sm:shadow-xl rounded-2xl px-4 py-6 sm:px-8 sm:py-8 animate-[fadeIn_0.35s_ease-out]">
-            <h2 className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1 sm:mb-2 text-center">
-              Welcome back
+          <div className="relative bg-white shadow-xl rounded-2xl px-8 py-8">
+            <h2 className="text-3xl font-bold text-indigo-600 text-center">
+              Welcome Back
             </h2>
-            <p className="text-[11px] sm:text-xs text-gray-500 text-center mb-5 sm:mb-6">
-              Log in to manage your resumes and continue where you left off.
+
+            <p className="text-sm text-gray-500 text-center mt-2 mb-6">
+              Log in to manage your resumes.
             </p>
 
             {error && (
-              <p className="text-red-500 text-xs sm:text-sm mb-3 sm:mb-4 text-center animate-[fadeIn_0.2s_ease-out]">
+              <p className="text-red-500 text-sm mb-4 text-center">
                 {error}
               </p>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="email"
                 placeholder="Email"
                 required
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none transition text-sm sm:text-base"
+                className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -84,34 +83,34 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none transition pr-16 text-sm sm:text-base"
+                  className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none pr-16"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute inset-y-0 right-3 flex items-center text-[11px] sm:text-xs text-gray-500 hover:text-gray-700"
+                  className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500"
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] sm:text-xs text-gray-500">
-                <label className="flex items-center gap-2 cursor-pointer select-none">
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-3.5 w-3.5 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600"
                   />
-                  <span>Keep me signed in</span>
+                  Keep me signed in
                 </label>
 
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="text-indigo-600 hover:text-indigo-800 font-medium"
+                  className="text-indigo-600 hover:underline"
                 >
                   Forgot password?
                 </button>
@@ -119,29 +118,17 @@ function Login() {
 
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white py-2.5 sm:py-3 rounded-md text-sm sm:text-base hover:bg-indigo-700 transition transform hover:-translate-y-0.5"
+                className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition"
               >
                 Login
               </button>
             </form>
 
-            <p className="text-[10px] sm:text-[11px] text-gray-400 mt-3 sm:mt-4 text-center">
-              By logging in, you agree to our{" "}
-              <span className="text-indigo-500 cursor-pointer hover:underline">
-                Terms
-              </span>{" "}
-              and{" "}
-              <span className="text-indigo-500 cursor-pointer hover:underline">
-                Privacy Policy
-              </span>
-              .
-            </p>
-
-            <p className="text-[11px] sm:text-xs text-gray-500 mt-4 text-center">
+            <p className="text-xs text-gray-500 mt-6 text-center">
               New to QuickResumeAI?{" "}
               <Link
                 to="/register"
-                className="text-indigo-600 hover:text-indigo-800 font-medium"
+                className="text-indigo-600 hover:underline"
               >
                 Create an account
               </Link>

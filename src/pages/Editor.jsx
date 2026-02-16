@@ -4,15 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import API from "../services/api";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+//import html2canvas from "html2canvas";
+//import jsPDF from "jspdf";
 import ResumePreview from "../components/ResumePreview";
-
-
-<Helmet>
-  <title>Editor | QuickResumeAI</title>
-  <meta name="robots" content="noindex, nofollow" />
-</Helmet>
 
 const defaultContent = {
   header: {
@@ -62,8 +56,22 @@ function Editor() {
   const [activeSection, setActiveSection] = useState("header");
   const [sections, setSections] = useState(defaultSections);
   const [content, setContent] = useState(defaultContent);
-  const [error, setError] = useState(null);
+  //const [error, setError] = useState(null);
   const [aiEnhancing, setAiEnhancing] = useState(false); // global enhance state
+
+  useEffect(() => {
+    document.title = "Resume Editor | QuickResumeAI";
+
+    // Optional: prevent indexing private pages
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
 
   // Fetch resume
   useEffect(() => {
