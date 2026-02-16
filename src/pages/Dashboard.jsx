@@ -96,14 +96,19 @@ function Dashboard() {
 
     return sections.map((sec) => {
       const data = content[sec.contentKey];
-      if (
-        !data ||
-        (Array.isArray(data) && data.length === 0) ||
-        (typeof data === "object" &&
-          !Array.isArray(data) &&
-          Object.values(data).every((v) => !v))
-      )
-        return null;
+
+      // header: always try to render (even if partially empty)
+      if (sec.type !== "header") {
+        if (
+          !data ||
+          (Array.isArray(data) && data.length === 0) ||
+          (typeof data === "object" &&
+            !Array.isArray(data) &&
+            Object.values(data).every((v) => !v))
+        ) {
+          return null;
+        }
+      }
 
       return (
         <div key={sec.id} className="mb-6">
@@ -111,9 +116,11 @@ function Dashboard() {
             <h3 className="font-semibold text-base sm:text-lg">{sec.title}</h3>
           )}
 
-          {sec.type === "header" && (
+          {sec.type === "header" && data && (
             <>
-              <h1 className="text-2xl sm:text-3xl font-bold">{data.fullName}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">
+                {data.fullName || "Your Name"}
+              </h1>
               {data.headline && (
                 <p className="text-gray-600 mt-1 text-sm sm:text-base">
                   {data.headline}
@@ -138,19 +145,69 @@ function Dashboard() {
             <p className="mt-1 text-sm sm:text-base">{data}</p>
           )}
 
-          {sec.type === "list" &&
+          {/* Education list using degree/institution/duration */}
+          {sec.type === "list" && sec.id === "education" &&
+            Array.isArray(data) &&
+            data.map((item, i) => (
+              <div key={i} className="mb-2">
+                {(item.degree || item.institution) && (
+                  <p className="font-semibold text-sm sm:text-base">
+                    {item.degree}
+                    {item.institution && ` • ${item.institution}`}
+                  </p>
+                )}
+                {item.duration && (
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    {item.duration}
+                  </p>
+                )}
+              </div>
+            ))}
+
+          {/* Projects list using title/description/techStack */}
+          {sec.type === "list" && sec.id === "projects" &&
+            Array.isArray(data) &&
             data.map((item, i) => (
               <div key={i} className="mb-2">
                 {item.title && (
-                  <strong className="text-sm sm:text-base">{item.title}</strong>
+                  <p className="font-semibold text-sm sm:text-base">
+                    {item.title}
+                  </p>
                 )}
                 {item.description && (
-                  <p className="text-sm sm:text-base">{item.description}</p>
+                  <p className="text-sm sm:text-base">
+                    {item.description}
+                  </p>
+                )}
+                {item.techStack && (
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    Tech: {item.techStack}
+                  </p>
+                )}
+              </div>
+            ))}
+
+          {/* Generic list fallback (for any other list-type sections) */}
+          {sec.type === "list" &&
+            !["education", "projects"].includes(sec.id) &&
+            Array.isArray(data) &&
+            data.map((item, i) => (
+              <div key={i} className="mb-2">
+                {item.title && (
+                  <strong className="text-sm sm:text-base">
+                    {item.title}
+                  </strong>
+                )}
+                {item.description && (
+                  <p className="text-sm sm:text-base">
+                    {item.description}
+                  </p>
                 )}
               </div>
             ))}
 
           {sec.type === "experience" &&
+            Array.isArray(data) &&
             data.map((exp, i) => (
               <div key={i} className="mb-4">
                 <p className="font-semibold text-sm sm:text-base">
@@ -172,6 +229,7 @@ function Dashboard() {
             ))}
 
           {sec.type === "skills" &&
+            data &&
             Object.entries(data).map(
               ([key, value]) =>
                 value && (
