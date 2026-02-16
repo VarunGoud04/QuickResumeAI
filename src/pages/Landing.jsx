@@ -6,12 +6,13 @@ import {
   CogIcon,
 } from "@heroicons/react/24/outline";
 
+
 function Landing() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-purple-50">
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-16 bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
+        <section className="flex flex-col items-center justify-center text-center px-6 pb-16 bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.2)_1px,transparent_0)] bg-[length:60px_60px]" />
 

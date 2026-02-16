@@ -1,16 +1,18 @@
+// Layout.jsx
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 
 function Layout() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+    {/* fixed navbar */}
       <Navbar />
 
-      {/* Offset for floating navbar */}
-      <div className="pt-32 px-4">
+      {/* only enough padding to clear navbar */}
+      <main className="flex-1 pt-20">
         <Outlet />
-      </div>
+      </main>
 
       <Footer />
     </div>

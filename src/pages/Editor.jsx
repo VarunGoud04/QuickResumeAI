@@ -8,6 +8,12 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ResumePreview from "../components/ResumePreview";
 
+
+<Helmet>
+  <title>Editor | QuickResumeAI</title>
+  <meta name="robots" content="noindex, nofollow" />
+</Helmet>
+
 const defaultContent = {
   header: {
     fullName: "",

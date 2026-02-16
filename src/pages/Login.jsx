@@ -4,6 +4,12 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import API from "../services/api";
+import { Helmet } from "react-helmet-async";
+
+<Helmet>
+  <title>Login | QuickResumeAI</title>
+  <meta name="robots" content="noindex, nofollow" />
+</Helmet>
 
 function Login() {
   const [email, setEmail] = useState("");

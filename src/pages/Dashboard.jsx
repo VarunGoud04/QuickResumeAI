@@ -4,6 +4,12 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import API from "../services/api";
 
+<Helmet>
+  <title>Dashboard | QuickResumeAI</title>
+  <meta name="robots" content="noindex, nofollow" />
+</Helmet>
+
+
 function Dashboard() {
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);

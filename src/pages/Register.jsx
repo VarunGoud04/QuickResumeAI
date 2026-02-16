@@ -5,6 +5,11 @@ import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import API from "../services/api";
 
+<Helmet>
+  <title>Register | QuickResumeAI</title>
+  <meta name="robots" content="noindex, nofollow" />
+</Helmet>
+
 function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName]   = useState("");
