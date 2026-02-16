@@ -1,15 +1,8 @@
+// frontend/src/services/api.js
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://quickresumebackend.onrender.com/api",
-});
-
-API.interceptors.request.use((req) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (user?.token) {
-    req.headers.Authorization = `Bearer ${user.token}`;
-  }
-  return req;
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 export default API;
